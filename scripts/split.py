@@ -76,7 +76,7 @@ def load_classification_files():
 
 def simplify_word(word):
     # 使用正则表达式提取词部分
-    match = re.match(r'^\(([\w\s]+):\d+\.\d+\)$|^\(([\w\s]+)\)$', word)
+    match = re.match(r'^\(([\w\s]+):\d+\.\d+\)$|^\(+([\w\s]+)\)+$', word)
     if match:
         processed_word = match.group(1) or match.group(2)
         return processed_word
