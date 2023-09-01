@@ -10,7 +10,12 @@ def add_tab():
         with gr.Row().style(equal_height=False):
             with gr.Column(variant='panel'):
                 gr.HTML(
-                    value="<p>Differentiate prompts according to different types.</p>")
+                    value="<p>Differentiate prompts according to different types.")
+
+                replace_underscore = gr.Checkbox(
+                    value=True,
+                    label="Replace underscores with spaces",
+                    elem_id="replace_underscore_checkbox")
 
                 need_split_prompts = gr.Textbox(
                     lines=6,
@@ -32,6 +37,7 @@ def add_tab():
                 fn=do_split,
                 inputs=[
                     need_split_prompts,
+                    replace_underscore,
                 ],
                 outputs=[submit_result]
             )
@@ -69,7 +75,7 @@ def load_classification_files():
 # Modify do_split function to use the classification files
 
 
-def do_split(need_split_prompts):
+def do_split(need_split_prompts, replace_underscore):
     classifications = load_classification_files()
     results = {key: [] for key in classifications.keys()}
 
@@ -82,6 +88,9 @@ def do_split(need_split_prompts):
 
         if not prompt:
             continue
+
+        if replace_underscore:
+            prompt = prompt.replace("_", " ")
 
         classified = False
         for file_name, keywords in classifications.items():
@@ -97,7 +106,7 @@ def do_split(need_split_prompts):
     for file_name, prompts in results.items():
         if len(prompts) == 0:
             continue
-        splited_result += f"[:{os.path.splitext(file_name)[0]}:99], "
+        splited_result += f"[:{os.path.splitext(file_name)[0]}:99] "
         splited_result += ", ".join(prompts) + "\n\n"
 
     return splited_result
