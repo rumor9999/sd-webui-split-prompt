@@ -13,7 +13,7 @@ def add_tab():
                     value="<p>Differentiate prompts according to different types.")
 
                 replace_underscore = gr.Checkbox(
-                    value=True,
+                    value=lambda:True,
                     label="Replace underscores with spaces",
                     elem_id="replace_underscore_checkbox")
 
