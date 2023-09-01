@@ -39,28 +39,6 @@ def add_tab():
     return [(ui, "Split prompts", "split_prompts")]
 
 
-def load_classification_files2():
-    # 脚本目录下的 "分類" 目录的路径
-    base_path = os.path.join(os.path.dirname(
-        os.path.dirname(os.path.realpath(__file__))), "分類")
-
-    # 获取 "分類" 目录下的所有 .txt 文件
-    file_names = [file for file in os.listdir(
-        base_path) if file.endswith(".txt")]
-
-    # 对文件名进行排序
-    file_names.sort()
-
-    file_contents = {}
-
-    for file_name in file_names:
-        with open(os.path.join(base_path, file_name), "r", encoding="utf-8") as file:
-            file_contents[file_name] = [word.lower()
-                                        for word in file.read().splitlines()]
-
-    return file_contents
-
-
 def load_classification_files():
     base_path = os.path.join(os.path.dirname(
         os.path.dirname(os.path.realpath(__file__))), "分類")
@@ -113,7 +91,7 @@ def do_split(need_split_prompts):
     for file_name, prompts in results.items():
         if len(prompts) == 0:
             continue
-        splited_result += f"[:{os.path.splitext(file_name)[0]}:99]\n"
+        splited_result += f"[:{os.path.splitext(file_name)[0]}:99], "
         splited_result += ", ".join(prompts) + "\n\n"
 
     return splited_result
