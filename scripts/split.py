@@ -47,6 +47,13 @@ def add_tab():
     return [(ui, "Split prompts", "split_prompts")]
 
 
+def load_txt_to_dictionary(filePath, main_folder, file_contents):
+    with open(os.path.join(filePath), "r", encoding="utf-8") as f:
+        # Add the contents of the txt file to the main folder's list
+        file_contents[main_folder].extend(
+            [word.lower() for word in f.read().splitlines()])
+
+
 def load_classification_files():
     base_path = os.path.join(os.path.dirname(
         os.path.dirname(os.path.realpath(__file__))), "分類")
@@ -66,10 +73,12 @@ def load_classification_files():
             for dirpath, dirnames, filenames in os.walk(main_folder_path):
                 for file in filenames:
                     if file.endswith(".txt"):
-                        with open(os.path.join(dirpath, file), "r", encoding="utf-8") as f:
-                            # Add the contents of the txt file to the main folder's list
-                            file_contents[main_folder].extend(
-                                [word.lower() for word in f.read().splitlines()])
+                        load_txt_to_dictionary(
+                            os.path.join(dirpath, file), main_folder, file_contents)
+        elif os.path.isfile(main_folder_path) and main_folder.endswith(".txt"):
+            file_contents[main_folder.replace(".txt", "")] = []
+            load_txt_to_dictionary(
+                main_folder_path, main_folder.replace(".txt", ""), file_contents)
 
     return file_contents
 
