@@ -32,6 +32,7 @@ def add_tab():
                 submit_result = gr.Textbox(
                     label="Result",
                     elem_id="split_result",
+                    interactive=False,
                     show_copy_button=True)
 
             button_split_prompts.click(
@@ -127,15 +128,17 @@ def do_split(need_split_prompts, replace_underscore):
     seg_word = ", "
     splited_result = ""
     for file_name, prompts in results.items():
-        if file_name.startswith("lora"):
-            seg_word = "\n"
-
         if len(prompts) == 0:
             continue
-        splited_result += f"[:{os.path.splitext(file_name)[0]}:99] "
+
+        if file_name.startswith("lora"):
+            seg_word = "\n"
+        else:
+            splited_result += f"[:{os.path.splitext(file_name)[0]}:99] "
+
         splited_result += seg_word.join(prompts) + "\n\n"
 
-    return splited_result
+    return splited_result.rstrip("\n")
 
 
 script_callbacks.on_ui_tabs(add_tab)
