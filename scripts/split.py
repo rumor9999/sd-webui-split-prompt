@@ -72,11 +72,17 @@ def load_classification_files():
 def do_split(need_split_prompts):
     classifications = load_classification_files()
     results = {key: [] for key in classifications.keys()}
-    results["未分類"] = []
+
+    if "其他" not in results:
+        results["其他"] = []
 
     prompts = need_split_prompts.split(",")
     for prompt in prompts:
         prompt = prompt.strip().lower()
+
+        if not prompt:
+            continue
+
         classified = False
         for file_name, keywords in classifications.items():
             if any(keyword == prompt for keyword in keywords):
@@ -84,7 +90,7 @@ def do_split(need_split_prompts):
                 classified = True
                 break
         if not classified:
-            results["未分類"].append(prompt)
+            results["其他"].append(prompt)
 
     # Format the results for output
     splited_result = ""
