@@ -112,6 +112,10 @@ def do_split(need_split_prompts, replace_underscore):
         if not prompt:
             continue
 
+        if prompt.startswith("<lora:"):
+            results["lora"].append(prompt)
+            continue
+
         if replace_underscore:
             prompt = prompt.replace("_", " ")
 
@@ -127,10 +131,7 @@ def do_split(need_split_prompts, replace_underscore):
                 break
 
         if not classified:
-            if prompt.startswith("<lora:"):
-                results["lora"].append(prompt)
-            else:
-                results["其他"].append(prompt)
+            results["其他"].append(prompt)
 
     # Format the results for output
 
